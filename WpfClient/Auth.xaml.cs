@@ -28,21 +28,26 @@ namespace WpfClient
             {
                 ErrorLabel.Content = "Пустое имя!";
                 ErrorLabel.Visibility = Visibility.Visible;
-            } else
+            }
+            else
             {
-                if (ClientManager.GetClient().SetUserName(AuthTextBox.Text))
+                int ev = ClientManager.GetClient().SetUserName(AuthTextBox.Text);
+                switch (ev)
                 {
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    this.Hide();
-                    //(this.Parent as MainWindow).Visibility = Visibility.Visible;
-                    
-                    //Close();
-                } else
-                {
-                    ErrorLabel.Content = "Такое имя уже занято!";
-                }
-
+                    case Client.EVENT_CONNECT:
+                        this.Hide();
+                        MainWindow mainWindow = new MainWindow();
+                        mainWindow.Show();
+                        break;
+                    case Client.EVENT_ERROR_NAME:
+                        ErrorLabel.Content = "Такое имя уже занято!";
+                        ErrorLabel.Visibility = Visibility.Visible;
+                        break;
+                    case Client.EVENT_ERROR_CONNECT:
+                        ErrorLabel.Content = "Ошибка подключения";
+                        ErrorLabel.Visibility = Visibility.Visible;
+                        break;
+                };
             }
         }
     }

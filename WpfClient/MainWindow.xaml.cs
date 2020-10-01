@@ -31,7 +31,6 @@ namespace WpfClient
 
             backgroundThread = new Thread(Listener) { IsBackground = true };
             backgroundThread.Start();
-            
         }
 
         private void Listener(object state)
@@ -53,11 +52,26 @@ namespace WpfClient
 
         private void MessageSenderButton_Click(object sender, RoutedEventArgs e)
         {
+            SendMessage();
+        }
+
+        private void SendMessage()
+        {
             if (MessageTextBox.Text.Length > 0)
             {
                 ClientManager.GetClient().Send(MessageTextBox.Text);
                 MessageTextBox.Text = "";
             }
+        }
+
+        private void MessageTextBox_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SendMessage();
+                return;
+            }
+            //DefaultAction(this, EventArgs.Empty);
         }
     }
 }

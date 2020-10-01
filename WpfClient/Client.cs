@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -10,6 +11,7 @@ namespace WpfClient
 {
     public class Client
     {
+        public const int EVENT_CONNECT = 0, EVENT_ERROR_CONNECT = 1, EVENT_ERROR_NAME = 2;
         protected internal NetworkStream Stream { get; private set; }
         public string userName { get; private set; }
         TcpClient client;
@@ -17,22 +19,34 @@ namespace WpfClient
         public Client(string address, int port)
         {
             client = new TcpClient();
-            client.Connect(address, port);
+            try
+            {
+                client.Connect(address, port);
+            } catch(Exception e) {  }
         }
 
-        public bool SetUserName(string username)
+        public int SetUserName(string username)
         {
-            userName = username;
-            Stream = client.GetStream();
-            byte[] data = Encoding.UTF8.GetBytes(userName);
-            Stream.Write(data, 0, data.Length);
-            return (client.Connected);
+            if (!client.Connected)
+            {
+                return EVENT_ERROR_CONNECT;
+            } else
+            {
+                userName = username;
+                Stream = client.GetStream();
+                byte[] data = Encoding.UTF8.GetBytes(userName);
+                Stream.Write(data, 0, data.Length);
+            }
+            return client.Connected ? EVENT_CONNECT : EVENT_ERROR_NAME;
         }
 
         public void Send(string message)
         {
-            byte[] data = Encoding.UTF8.GetBytes(message);
-            Stream.Write(data, 0, data.Length);
+            if (client.Connected)
+            {
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                Stream.Write(data, 0, data.Length);
+            }
         }
 
         public void Listen(ref ListBox listBox, Action<string> action)
