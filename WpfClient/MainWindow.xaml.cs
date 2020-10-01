@@ -28,7 +28,7 @@ namespace WpfClient
         public MainWindow()
         {
             InitializeComponent();
-
+            nameLabel.Content = ClientManager.GetClient().userName;
             backgroundThread = new Thread(Listener) { IsBackground = true };
             backgroundThread.Start();
         }

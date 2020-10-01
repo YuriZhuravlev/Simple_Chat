@@ -10,5 +10,7 @@
         <ListBox x:Name="MessageBox" Margin="39,23,0,0" Height="357" VerticalAlignment="Top" HorizontalAlignment="Left" Width="488"/>
         <TextBox x:Name="MessageTextBox" Margin="39,0,0,26" Text="" TextWrapping="Wrap" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="361" PreviewKeyUp="MessageTextBox_PreviewKeyUp"/>
         <Button x:Name="MessageSenderButton" Content="Отправить" Margin="0,0,273,26" HorizontalAlignment="Right" Width="96" Height="23" VerticalAlignment="Bottom" Click="MessageSenderButton_Click"/>
+        <Image HorizontalAlignment="Left" Height="300" Margin="545,65,0,0" VerticalAlignment="Top" Width="175" Source="/listUsers.png" Stretch="None"/>
+        <Label x:Name="nameLabel" Content="username" HorizontalAlignment="Left" Margin="545,23,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
     </Grid>
 </Window>
