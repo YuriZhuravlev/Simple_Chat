@@ -1,0 +1,14 @@
+﻿<Window x:Class="WpfClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfClient"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="482" Width="800" Closed="Window_Closed" ResizeMode="NoResize">
+    <Grid>
+        <ListBox x:Name="MessageBox" Margin="39,23,0,0" Height="357" VerticalAlignment="Top" HorizontalAlignment="Left" Width="488"/>
+        <TextBox x:Name="MessageTextBox" Margin="39,0,0,26" Text="" TextWrapping="Wrap" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="361"/>
+        <Button x:Name="MessageSenderButton" Content="Отправить" Margin="0,0,273,26" HorizontalAlignment="Right" Width="96" Height="23" VerticalAlignment="Bottom" Click="MessageSenderButton_Click"/>
+    </Grid>
+</Window>
