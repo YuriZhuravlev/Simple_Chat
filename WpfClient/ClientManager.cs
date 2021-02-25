@@ -10,11 +10,11 @@ namespace WpfClient
         public const string IP_ADDRESS= "192.168.0.103";
         public const int PORT = 8006;
 
-        public static Client GetClient()
+        public static Client GetClient(string address = "")
         {
-            if (client == null)
+            if (client == null || address != "")
             {
-                client = new Client(IP_ADDRESS, PORT);
+                client = new Client(address, PORT);
             }
             return client;
         }

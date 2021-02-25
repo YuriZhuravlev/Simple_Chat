@@ -24,14 +24,14 @@ namespace WpfClient
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (AuthTextBox.Text.Length == 0)
+            if (AuthTextBox.Text.Length == 0 || AuthServerTextBox.Text.Length == 0)
             {
-                ErrorLabel.Content = "Пустое имя!";
+                ErrorLabel.Content = "Пустое поле!";
                 ErrorLabel.Visibility = Visibility.Visible;
             }
             else
             {
-                int ev = ClientManager.GetClient().SetUserName(AuthTextBox.Text);
+                int ev = ClientManager.GetClient(AuthServerTextBox.Text).SetUserName(AuthTextBox.Text);
                 switch (ev)
                 {
                     case Client.EVENT_CONNECT:

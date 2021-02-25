@@ -17,8 +17,9 @@
 
 import select
 import socket
+import datetime
 
-IP_ADDRESS = '192.168.0.103'
+IP_ADDRESS = '192.168.0.102'
 PORT = 8006
 
 # Фунция для отправки сообщений всем кроме отправителя
@@ -76,7 +77,7 @@ if __name__ == "__main__":
                     # sockfd.send("OK".encode('utf-8'))
                     # добавить имя и адрес
                     record[addr] = name
-                    print("Client (%s, %s) connected" % addr, " [", record[addr], "]")
+                    print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M"), "|", "Client (%s, %s) connected" % addr, " [", record[addr], "]")
 
                     sockfd.send("Welcome to chat room. Enter 'tata' anytime to exit".encode('utf-8'))
                     send_to_all(sockfd, name + " joined the conversation ")
@@ -96,7 +97,7 @@ if __name__ == "__main__":
                     if data == "tata":
                         msg = record[(i, p)] + " left the conversation"
                         send_to_all(sock, msg)
-                        print("Client (%s, %s) is offline" % (i, p), " [", record[(i, p)], "]")
+                        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M"), "|", "Client (%s, %s) is offline" % (i, p), " [", record[(i, p)], "]")
 
                         del record[(i, p)]
                         connected_list.remove(sock)
@@ -113,7 +114,7 @@ if __name__ == "__main__":
                     (i, p) = sock.getpeername()
                     send_to_all(sock,
                                 record[(i, p)] + " left the conversation unexpectedly")
-                    print("Client (%s, %s) is offline (error)" % (i, p), " [", record[(i, p)], "]\n")
+                    print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M"), "|", "Client (%s, %s) is offline (error)" % (i, p), " [", record[(i, p)], "]\n")
 
                     del record[(i, p)]
                     connected_list.remove(sock)
