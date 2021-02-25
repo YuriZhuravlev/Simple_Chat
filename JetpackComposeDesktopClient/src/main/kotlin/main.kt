@@ -2,12 +2,12 @@ import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.ExperimentalKeyInput
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.shortcuts
 import androidx.compose.ui.unit.dp
@@ -29,7 +29,6 @@ val colors = Colors(
     isLight = true
 )
 
-@ExperimentalKeyInput
 fun main() = Window {
     val username = "test_user"
 
@@ -64,8 +63,10 @@ fun main() = Window {
 
 /**
  * Вывод строки ввода - EditText + Button, если поле ввода не пусто
+ *
+ * // TODO - надо разобраться что делать с добавлением сообщения, так как код повторяется, а text и fill просто не объявить
+ * // требуется функция с аннотацией @Composable
  */
-@ExperimentalKeyInput
 @Composable
 fun inputLine() {
     // содержание текстового поля
@@ -77,6 +78,7 @@ fun inputLine() {
             text,
             onValueChange = { s: String -> text = s; fill = 0.8f },
             modifier = Modifier.fillMaxWidth(fill)
+                .fillMaxHeight()
                 .shortcuts {
                     on(Key.Enter) {
                         if (text.isNotEmpty()) {
@@ -90,9 +92,11 @@ fun inputLine() {
         )
         if (text.isNotEmpty()) {
             Button(modifier = Modifier.fillMaxSize(), onClick = {
-                listMessages.add(text)
-                text = ""
-                fill = 1f
+                if (text.isNotEmpty()) {
+                    listMessages.add(text)
+                    text = ""
+                    fill = 1f
+                }
             }) {
                 Text("Send")
             }
