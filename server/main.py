@@ -1,25 +1,8 @@
-# import socket
-# IP_ADDRESS = '192.168.0.103'
-#
-# sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# sock.bind((IP_ADDRESS, 8006))
-# client = []  # Массив где храним адреса клиентов
-# print('Start Server on', IP_ADDRESS)
-# while 1:
-#     data, address = sock.recvfrom(1024)
-#     print(address[0], address[1])
-#     if address not in client:
-#         client.append(address)  # Если такого клиента нету , то добавить
-#     for clients in client:
-#         if clients == address:
-#             continue  # Не отправлять данные клиенту, который их прислал
-#         sock.sendto(data, clients)
-
 import select
 import socket
 import datetime
 
-IP_ADDRESS = '192.168.0.102'
+IP_ADDRESS = '192.168.0.103'
 PORT = 8006
 
 # Фунция для отправки сообщений всем кроме отправителя
@@ -68,7 +51,7 @@ if __name__ == "__main__":
 
                 # если повторяется имя пользователя
                 if name in record.values():
-                    sockfd.send("Username already taken!".encode('utf-8'))
+                    sockfd.send("Username already taken!\n".encode('utf-8'))
                     del record[addr]
                     connected_list.remove(sockfd)
                     sockfd.close()
@@ -79,8 +62,8 @@ if __name__ == "__main__":
                     record[addr] = name
                     print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M"), "|", "Client (%s, %s) connected" % addr, " [", record[addr], "]")
 
-                    sockfd.send("Welcome to chat room. Enter 'tata' anytime to exit".encode('utf-8'))
-                    send_to_all(sockfd, name + " joined the conversation ")
+                    sockfd.send("Welcome to chat room. Enter 'tata' anytime to exit\r\n".encode('utf-8'))
+                    send_to_all(sockfd, name + " joined the conversation\n")
 
             # Входящее сообщение от клиента
             else:
@@ -95,7 +78,7 @@ if __name__ == "__main__":
                     # получить addr клиента, отправившего сообщение
                     i, p = sock.getpeername()
                     if data == "tata":
-                        msg = record[(i, p)] + " left the conversation"
+                        msg = record[(i, p)] + " left the conversation\n"
                         send_to_all(sock, msg)
                         print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M"), "|", "Client (%s, %s) is offline" % (i, p), " [", record[(i, p)], "]")
 
@@ -105,15 +88,15 @@ if __name__ == "__main__":
                         continue
 
                     else:
-                        sock.send(data1)
-                        msg = record[(i, p)] + ": " + data
+                        sock.send((data + '\n').encode('utf-8'))
+                        msg = record[(i, p)] + ": " + data  + '\n'
                         send_to_all(sock, msg)
 
                 # внезапный выход пользователя
                 except:
                     (i, p) = sock.getpeername()
                     send_to_all(sock,
-                                record[(i, p)] + " left the conversation unexpectedly")
+                                record[(i, p)] + " left the conversation unexpectedly\n")
                     print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M"), "|", "Client (%s, %s) is offline (error)" % (i, p), " [", record[(i, p)], "]\n")
 
                     del record[(i, p)]
