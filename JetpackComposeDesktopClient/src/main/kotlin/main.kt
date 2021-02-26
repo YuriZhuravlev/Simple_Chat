@@ -12,7 +12,8 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.shortcuts
 import androidx.compose.ui.unit.dp
 
-val listMessages = listOf("456", "648", "hello world!").toMutableStateList()
+val username = "test_user"
+val listMessages = listOf<String>().toMutableStateList()
 val colors = Colors(
     primary = Color(0xFF3B4252),
     primaryVariant = Color(0xFF2E3440),
@@ -29,8 +30,16 @@ val colors = Colors(
     isLight = true
 )
 
+fun onMessage(message: String) {
+    listMessages.add(message)
+}
+
+val client = ChatClient("192.168.0.103", 8006, username) {
+    onMessage(it)
+}
+
+
 fun main() = Window {
-    val username = "test_user"
 
     MaterialTheme(colors = colors) {
         Row(
@@ -82,7 +91,7 @@ fun inputLine() {
                 .shortcuts {
                     on(Key.Enter) {
                         if (text.isNotEmpty()) {
-                            listMessages.add(text)
+                            client.send(text)
                             text = ""
                             fill = 1f
                         }
@@ -93,7 +102,7 @@ fun inputLine() {
         if (text.isNotEmpty()) {
             Button(modifier = Modifier.fillMaxSize(), onClick = {
                 if (text.isNotEmpty()) {
-                    listMessages.add(text)
+                    client.send(text)
                     text = ""
                     fill = 1f
                 }
