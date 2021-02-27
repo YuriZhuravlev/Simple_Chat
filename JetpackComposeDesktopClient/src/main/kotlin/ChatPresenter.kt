@@ -5,32 +5,31 @@ class ChatPresenter {
     private lateinit var mUsername: String
     private val mListMessages = listOf<String>().toMutableStateList()
     private var mClient: ChatClient? = null
+    var isAuthenticated = mutableStateOf(false)
     // содержание текстового поля
-    var text by remember { mutableStateOf("") }
+    var text = mutableStateOf("")
     // переменная заполнения строки
-    var fill by remember { mutableStateOf(1f) }
+    var fill = mutableStateOf(1f)
 
     private fun onMessage(message: String) {
         mListMessages.add(message)
     }
 
-    fun isAuthenticated(): Boolean {
-        return mClient == null
-    }
 
     fun auth(host: String, username: String): Boolean {
-        if (isAuthenticated()) {
+        if (isAuthenticated.value) {
             return false
         }
         mUsername = username
         mClient = ChatClient(host, 8006, username) { onMessage(it) }
+        isAuthenticated.value = true
         return true
     }
 
     fun send() {
-        if (text.isNotEmpty()) {
-            fill = 1f
-            mClient!!.send(text)
+        if (isAuthenticated.value && text.value.isNotEmpty()) {
+            fill.value = 1f
+            mClient!!.send(text.value)
         }
     }
 
