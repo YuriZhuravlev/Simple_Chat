@@ -1,3 +1,5 @@
+package net
+
 import kotlinx.coroutines.*
 import java.io.*
 import java.net.Socket

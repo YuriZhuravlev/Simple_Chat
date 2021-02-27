@@ -1,14 +1,21 @@
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import net.ChatClient
 
 class ChatPresenter {
     private lateinit var mUsername: String
     private val mListMessages = listOf<String>().toMutableStateList()
     private var mClient: ChatClient? = null
     var isAuthenticated = mutableStateOf(false)
-    // содержание текстового поля
+
+    /**
+     * Переменная строки ввода
+     */
     var text = mutableStateOf("")
-    // переменная заполнения строки
+
+    /**
+     * Переменная заполнения строки
+     */
     var fill = mutableStateOf(1f)
 
     private fun onMessage(message: String) {
