@@ -62,7 +62,7 @@ fun authWindow() {
             modifier = Modifier.padding(5.dp)
                 .shortcuts {
                     on(Key.Enter) {
-                        hideError = validateInput(host, username)
+                        hideError = chatPresenter.validateInput(host, username)
                         if (hideError) {
                             chatPresenter.auth(host, username)
                         }
@@ -75,7 +75,7 @@ fun authWindow() {
             modifier = Modifier.padding(5.dp)
                 .shortcuts {
                     on(Key.Enter) {
-                        hideError = validateInput(host, username)
+                        hideError = chatPresenter.validateInput(host, username)
                         if (hideError) {
                             chatPresenter.auth(host, username)
                         }
@@ -87,12 +87,6 @@ fun authWindow() {
             Text("Error!", color = colors.error)
         }
     }
-}
-
-fun validateInput(host: String, username: String): Boolean {
-    val regex =
-        Regex("""(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)""")
-    return regex.containsMatchIn(host) && username.isNotEmpty()
 }
 
 /**
