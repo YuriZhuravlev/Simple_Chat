@@ -53,37 +53,40 @@ fun main() = Window {
 
 @Composable
 fun authWindow() {
-    Column {
+    Column(modifier = Modifier.padding(10.dp).fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         var host by remember { mutableStateOf("") }
         var username by remember { mutableStateOf("") }
+        var hideError by remember { mutableStateOf(true) }
         TextField(
             value = host, onValueChange = { s: String -> host = s },
-            modifier = Modifier.shortcuts {
-                on(Key.Enter) {
-                    if (validateInput(host, username)) {
-                        chatPresenter.auth(host, username)
+            modifier = Modifier.padding(5.dp)
+                .shortcuts {
+                    on(Key.Enter) {
+                        hideError = chatPresenter.validateInput(host, username)
+                        if (hideError) {
+                            chatPresenter.auth(host, username)
+                        }
                     }
-                }
-            },
-            singleLine = true
+                },
+            singleLine = true, isError = !hideError, label = {Text("IP-address")}
         )
         TextField(
             value = username, onValueChange = { s: String -> username = s },
-            modifier = Modifier.shortcuts {
-                on(Key.Enter) {
-                    if (validateInput(host, username)) {
-                        chatPresenter.auth(host, username)
+            modifier = Modifier.padding(5.dp)
+                .shortcuts {
+                    on(Key.Enter) {
+                        hideError = chatPresenter.validateInput(host, username)
+                        if (hideError) {
+                            chatPresenter.auth(host, username)
+                        }
                     }
-                }
-            },
-            singleLine = true
+                },
+            singleLine = true, isError= !hideError , label = {Text("Username")}
         )
+        if (!hideError) {
+            Text("Error!", color = colors.error)
+        }
     }
-}
-
-fun validateInput(host: String, username: String): Boolean {
-    val regex = Regex("""(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)""")
-    return regex.containsMatchIn(host)
 }
 
 /**

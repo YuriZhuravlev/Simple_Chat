@@ -33,10 +33,17 @@ class ChatPresenter {
         return true
     }
 
+    fun validateInput(host: String, username: String): Boolean {
+        val regex =
+            Regex("""(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)""")
+        return regex.containsMatchIn(host) && username.isNotEmpty()
+    }
+
     fun send() {
         if (isAuthenticated.value && text.value.isNotEmpty()) {
             fill.value = 1f
             mClient!!.send(text.value)
+            text.value = ""
         }
     }
 
