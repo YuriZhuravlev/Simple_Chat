@@ -1,9 +1,11 @@
+package net
+
 import kotlinx.coroutines.*
 import java.io.*
 import java.net.Socket
 
 
-class ChatClient(host: String, port: Int, username: String, onMessage: (String) -> Unit) {
+class ChatClient(host: String, port: Int, username: String, val onMessage: (String) -> Unit) {
     private lateinit var mSocket: Socket
     private lateinit var mInputStream: BufferedReader
     private lateinit var mOutputStream: OutputStream
