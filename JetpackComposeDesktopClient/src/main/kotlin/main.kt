@@ -12,59 +12,38 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.shortcuts
 import androidx.compose.ui.unit.dp
 
-val username = "test_user"
-val listMessages = listOf<String>().toMutableStateList()
-val colors = Colors(
-    primary = Color(0xFF3B4252),
-    primaryVariant = Color(0xFF2E3440),
-    secondary = Color(0xFFE5E9F0),
-    secondaryVariant = Color(0xFFD8DEE9),
-    background = Color.White,
-    surface = Color.White,
-    error = Color(0xFFB00020),
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    onError = Color.White,
-    isLight = true
-)
-
-fun onMessage(message: String) {
-    listMessages.add(message)
-}
-
-val client = ChatClient("192.168.0.103", 8006, username) {
-    onMessage(it)
-}
-
+lateinit var chatPresenter: ChatPresenter
 
 fun main() = Window {
-
+    chatPresenter = ChatPresenter()
     MaterialTheme(colors = colors) {
-        Row(
-            modifier = Modifier.fillMaxSize()
-                .padding(5.dp)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(0.7f)
-                    .padding(20.dp)
+        if (!chatPresenter.isAuthenticated()) {
+            //TODO auth
+        } else {
+            Row(
+                modifier = Modifier.fillMaxSize()
+                    .padding(5.dp)
             ) {
-                LazyColumn(Modifier.fillMaxHeight(0.88f).fillMaxWidth()) {
-                    itemsIndexed(listMessages) { i: Int, s: String ->
-                        messageItem(i, s)
+                Column(
+                    modifier = Modifier.fillMaxWidth(0.7f)
+                        .padding(20.dp)
+                ) {
+                    LazyColumn(Modifier.fillMaxHeight(0.88f).fillMaxWidth()) {
+                        itemsIndexed(chatPresenter.getListMessages()) { i: Int, s: String ->
+                            messageItem(i, s)
+                        }
                     }
+                    inputLine()
                 }
-                inputLine()
-            }
-            Column {
-                Text("Username: $username")
-                Box(
-                    modifier = Modifier.size(160.dp)
-                        .align(Alignment.End)
-                        .padding(10.dp)
-                        .background(Color.Cyan)
-                )
+                Column {
+                    Text("Username: ${chatPresenter.getUsername()}")
+                    Box(
+                        modifier = Modifier.size(160.dp)
+                            .align(Alignment.End)
+                            .padding(10.dp)
+                            .background(Color.Cyan)
+                    )
+                }
             }
         }
     }
@@ -72,40 +51,25 @@ fun main() = Window {
 
 /**
  * Вывод строки ввода - EditText + Button, если поле ввода не пусто
- *
- * // TODO - надо разобраться что делать с добавлением сообщения, так как код повторяется, а text и fill просто не объявить
- * // требуется функция с аннотацией @Composable
  */
 @Composable
 fun inputLine() {
-    // содержание текстового поля
-    var text by remember { mutableStateOf("") }
-    // переменная заполнения строки
-    var fill by remember { mutableStateOf(1f) }
     Row {
         TextField(
-            text,
-            onValueChange = { s: String -> text = s; fill = 0.8f },
-            modifier = Modifier.fillMaxWidth(fill)
+            chatPresenter.text,
+            onValueChange = { s: String -> chatPresenter.text = s; chatPresenter.fill = 0.8f },
+            modifier = Modifier.fillMaxWidth(chatPresenter.fill)
                 .fillMaxHeight()
                 .shortcuts {
                     on(Key.Enter) {
-                        if (text.isNotEmpty()) {
-                            client.send(text)
-                            text = ""
-                            fill = 1f
-                        }
+                        chatPresenter.send()
                     }
                 },
             singleLine = true
         )
-        if (text.isNotEmpty()) {
+        if (chatPresenter.text.isNotEmpty()) {
             Button(modifier = Modifier.fillMaxSize(), onClick = {
-                if (text.isNotEmpty()) {
-                    client.send(text)
-                    text = ""
-                    fill = 1f
-                }
+                chatPresenter.send()
             }) {
                 Text("Send")
             }
